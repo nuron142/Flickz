@@ -1,4 +1,4 @@
-package com.nuron.flickz.Movie;
+package com.nuron.flickz.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nuron.flickz.MovieDB.Movie;
 import com.nuron.flickz.R;
 import com.squareup.picasso.Picasso;
 
@@ -18,17 +19,17 @@ import java.util.List;
  * Created by sunil on 03-Aug-15.
  */
 public class MovieRecyclerAdapter  extends RecyclerView.Adapter<MovieRecyclerAdapter.ViewHolder> {
-    List<Result> mItems;
+    List<Movie> mItems;
     Context context;
 
     public MovieRecyclerAdapter(Context context1) {
         super();
         context = context1;
-        mItems = new ArrayList<Result>();
+        mItems = new ArrayList<>();
     }
 
-    public void addData(Result result) {
-        mItems.add(result);
+    public void addData(Movie movie) {
+        mItems.add(movie);
         notifyDataSetChanged();
     }
 
@@ -41,21 +42,20 @@ public class MovieRecyclerAdapter  extends RecyclerView.Adapter<MovieRecyclerAda
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_view, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        Result result = mItems.get(i);
+        Movie movie = mItems.get(i);
 
-        //result.get(0).
-        viewHolder.login.setText(result.getTitle());
-        viewHolder.repos.setText("repos: " + result.getReleaseDate());
-        viewHolder.blog.setText("blog: " + result.getVoteAverage());
+        //movie.get(0).
+        viewHolder.login.setText(movie.getTitle());
+        viewHolder.repos.setText("repos: " + movie.getReleaseDate());
+        viewHolder.blog.setText("blog: " + movie.getVoteAverage());
         Picasso.with(context)
-//                .load("https://image.tmdb.org/t/p/w185"+result.getPosterPath())
-                .load("https://image.tmdb.org/t/p/w185/jC1soM3OUOzehbxp7IMumgQEDvB.jpg")
+                .load("https://image.tmdb.org/t/p/w185" + movie.getPosterPath())
+                        // .load("https://image.tmdb.org/t/p/w185/jC1soM3OUOzehbxp7IMumgQEDvB.jpg")
                 .into(viewHolder.poster);
     }
 

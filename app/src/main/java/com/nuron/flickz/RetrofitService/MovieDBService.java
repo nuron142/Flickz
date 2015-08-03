@@ -1,7 +1,7 @@
-package com.nuron.flickz;
+package com.nuron.flickz.RetrofitService;
 
-import com.nuron.flickz.Movie.MovieDB;
-import com.nuron.flickz.Movie.Result;
+import com.nuron.flickz.MovieDB.Movie;
+import com.nuron.flickz.MovieDB.MovieList;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -16,10 +16,10 @@ public interface MovieDBService {
     String API_KEY= "80da0a99415ef0ec9d8d313dab77fbf7";
 
     @GET("/search/movie")
-    Observable<MovieDB> searchMovie(@Query("query") String query,@Query("api_key") String api_key );
+    Observable<MovieList> searchMovie(@Query("query") String query, @Query("api_key") String api_key);
 
 
     @GET("/movie/{id}")
-    Observable<Result> movieByID(@Path("id") String id,@Query("api_key") String api_key );
+    Observable<Movie> movieByID(@Path("id") String id, @Query("api_key") String api_key);
 
 }

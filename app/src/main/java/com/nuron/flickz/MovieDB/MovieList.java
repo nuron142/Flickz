@@ -1,13 +1,12 @@
-package com.nuron.flickz.Movie;
+package com.nuron.flickz.MovieDB;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-public class MovieDB {
+
+public class MovieList {
 
     private Integer page;
-    private List<Result> results = new ArrayList<Result>();
+    private List<Movie> movies = new ArrayList<>();
     private Integer totalPages;
     private Integer totalResults;
 
@@ -24,10 +23,10 @@ public class MovieDB {
     /**
      *
      * @return
-     * The results
+     * The movies
      */
-    public List<Result> getResults() {
-        return results;
+    public List<Movie> getResults() {
+        return movies;
     }
 
     /**

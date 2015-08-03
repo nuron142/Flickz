@@ -1,12 +1,12 @@
-package com.nuron.flickz.Movie;
+package com.nuron.flickz.MovieDB;
 
-public class Result {
+public class Movie {
 
     private Object backdropPath;
     private Integer id;
     private String overview;
     private String release_date;
-    private Object posterPath;
+    private String poster_path;
     private Double popularity;
     private String title;
     private Double vote_average;
@@ -64,8 +64,8 @@ public class Result {
      * @return
      * The posterPath
      */
-    public Object getPosterPath() {
-        return posterPath;
+    public String getPosterPath() {
+        return poster_path;
     }
 
 

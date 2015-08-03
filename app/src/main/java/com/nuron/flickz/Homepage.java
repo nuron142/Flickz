@@ -1,19 +1,18 @@
 package com.nuron.flickz;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import com.nuron.flickz.Data;
-import com.nuron.flickz.Movie.MovieDB;
-import com.nuron.flickz.Movie.MovieRecyclerAdapter;
-import com.nuron.flickz.Movie.Result;
+
+import com.nuron.flickz.Adapters.MovieRecyclerAdapter;
+import com.nuron.flickz.MovieDB.Movie;
+import com.nuron.flickz.MovieDB.MovieList;
+import com.nuron.flickz.RetrofitService.MovieDBService;
+import com.nuron.flickz.RetrofitService.ServiceFactory;
 
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class Homepage extends AppCompatActivity{
 //                service.movieByID("210479",MovieDBService.API_KEY)
 //                        .subscribeOn(Schedulers.newThread())
 //                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(new Subscriber<Result>() {
+//                        .subscribe(new Subscriber<Movie>() {
 //                            @Override
 //                            public final void onCompleted() {
 //                                // do nothing
@@ -68,7 +67,7 @@ public class Homepage extends AppCompatActivity{
 //                            }
 //
 //                            @Override
-//                            public final void onNext(Result response) {
+//                            public final void onNext(Movie response) {
 //                                Log.d("1","Movie Title = "+response.getTitle()+", Release date = "+response.getReleaseDate()+" Vote = "+response.getVoteAverage());
 //                                movieRecyclerAdapter.addData(response);
 //                            }
@@ -77,7 +76,7 @@ public class Homepage extends AppCompatActivity{
                 service.searchMovie("Locke", MovieDBService.API_KEY)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<MovieDB>() {
+                        .subscribe(new Subscriber<MovieList>() {
                             @Override
                             public final void onCompleted() {
                                 // do nothing
@@ -89,17 +88,18 @@ public class Homepage extends AppCompatActivity{
                             }
 
                             @Override
-                            public final void onNext(MovieDB response) {
+                            public final void onNext(MovieList response) {
                                // Log.d("1","Movie Title = "+response.getTitle()+", Release date = "+response.getReleaseDate()+" Vote = "+response.getVoteAverage());
                                 //movieRecyclerAdapter.addData(response);
 //                                int i=0;
 //                                for(i=0; i<response.getTotalPages();i++)
 //                                {
-                                    List<Result> results = response.getResults();
-                                    for (Result result : results)
+                                List<Movie> movies = response.getResults();
+                                for (Movie movie : movies)
                                     {
-                                        Log.d("1","Movie Title = "+result.getTitle()+", Release date = "+result.getReleaseDate()+" Vote = "+result.getVoteAverage());
-                                        movieRecyclerAdapter.addData(result);
+                                        Log.d("1", "Movie Title = " + movie.getTitle() + ", Release date = "
+                                                + movie.getReleaseDate() + " Vote = " + movie.getVoteAverage() + " PosterPath= https://image.tmdb.org/t/p/w185" + movie.getPosterPath());
+                                        movieRecyclerAdapter.addData(movie);
                                     }
                                 //}
 
