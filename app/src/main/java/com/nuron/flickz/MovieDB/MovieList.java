@@ -6,7 +6,7 @@ import java.util.List;
 public class MovieList {
 
     private Integer page;
-    private List<Movie> movies = new ArrayList<>();
+    private List<Movie> results = new ArrayList<>();
     private Integer totalPages;
     private Integer totalResults;
 
@@ -26,7 +26,7 @@ public class MovieList {
      * The movies
      */
     public List<Movie> getResults() {
-        return movies;
+        return results;
     }
 
     /**

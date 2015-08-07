@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.nuron.flickz.MovieDB.Movie;
 import com.nuron.flickz.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,13 +49,15 @@ public class MovieRecyclerAdapter  extends RecyclerView.Adapter<MovieRecyclerAda
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Movie movie = mItems.get(i);
 
-        //movie.get(0).
         viewHolder.login.setText(movie.getTitle());
-        viewHolder.repos.setText("repos: " + movie.getReleaseDate());
-        viewHolder.blog.setText("blog: " + movie.getVoteAverage());
-        Picasso.with(context)
+        viewHolder.repos.setText("Release Date : " + movie.getReleaseDate());
+        viewHolder.blog.setText("Rating : " + movie.getVoteAverage());
+//        Picasso.with(context)
+//                .load("https://image.tmdb.org/t/p/w185" + movie.getPosterPath())
+//                .into(viewHolder.poster);
+
+        Glide.with(context)
                 .load("https://image.tmdb.org/t/p/w185" + movie.getPosterPath())
-                        // .load("https://image.tmdb.org/t/p/w185/jC1soM3OUOzehbxp7IMumgQEDvB.jpg")
                 .into(viewHolder.poster);
     }
 

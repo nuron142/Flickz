@@ -51,6 +51,8 @@ public class Homepage extends AppCompatActivity{
         bFetch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+                Log.d("1", "Button clicked");
+
                 MovieDBService service = ServiceFactory.createRetrofitService(MovieDBService.class, MovieDBService.SERVICE_ENDPOINT);
 //                service.movieByID("210479",MovieDBService.API_KEY)
 //                        .subscribeOn(Schedulers.newThread())
@@ -75,6 +77,7 @@ public class Homepage extends AppCompatActivity{
 
                 service.searchMovie("Locke", MovieDBService.API_KEY)
                         .subscribeOn(Schedulers.newThread())
+                        .limit(5)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<MovieList>() {
                             @Override
@@ -89,11 +92,7 @@ public class Homepage extends AppCompatActivity{
 
                             @Override
                             public final void onNext(MovieList response) {
-                               // Log.d("1","Movie Title = "+response.getTitle()+", Release date = "+response.getReleaseDate()+" Vote = "+response.getVoteAverage());
-                                //movieRecyclerAdapter.addData(response);
-//                                int i=0;
-//                                for(i=0; i<response.getTotalPages();i++)
-//                                {
+
                                 List<Movie> movies = response.getResults();
                                 for (Movie movie : movies)
                                     {
@@ -101,8 +100,6 @@ public class Homepage extends AppCompatActivity{
                                                 + movie.getReleaseDate() + " Vote = " + movie.getVoteAverage() + " PosterPath= https://image.tmdb.org/t/p/w185" + movie.getPosterPath());
                                         movieRecyclerAdapter.addData(movie);
                                     }
-                                //}
-
                             }
                         });
 
