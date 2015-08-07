@@ -87,7 +87,7 @@ public class Homepage extends AppCompatActivity{
 
                             @Override
                             public final void onError(Throwable e) {
-                                Log.e("GithubDemo", e.getMessage());
+                                Log.e("Flickz Error : ", e.getMessage());
                             }
 
                             @Override
