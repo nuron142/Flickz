@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/releaseDate"
                 android:layout_alignStart="@+id/releaseDate"
-                android:layout_centerVertical="true"
+                android:layout_below="@+id/releaseDate"
                 android:text="Rating : 8.5"
                 android:textSize="12sp" />
             <ImageView

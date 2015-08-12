@@ -91,5 +91,4 @@ public class RealmMovie extends RealmObject {
         this.vote_average = vote_average;
     }
 
-
 }
