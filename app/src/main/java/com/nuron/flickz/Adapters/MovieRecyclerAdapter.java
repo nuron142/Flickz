@@ -15,6 +15,9 @@ import com.nuron.flickz.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by sunil on 03-Aug-15.
  */
@@ -35,7 +38,6 @@ public class MovieRecyclerAdapter  extends RecyclerView.Adapter<MovieRecyclerAda
 
     public void clear() {
         mItems.clear();
-        notifyDataSetChanged();
     }
 
     @Override
@@ -49,15 +51,12 @@ public class MovieRecyclerAdapter  extends RecyclerView.Adapter<MovieRecyclerAda
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Movie movie = mItems.get(i);
 
-        viewHolder.login.setText(movie.getTitle());
-        viewHolder.repos.setText("Release Date : " + movie.getReleaseDate());
-        viewHolder.blog.setText("Rating : " + movie.getVoteAverage());
-//        Picasso.with(context)
-//                .load("https://image.tmdb.org/t/p/w185" + movie.getPosterPath())
-//                .into(viewHolder.poster);
+        viewHolder.movieName.setText(movie.getTitle());
+        viewHolder.releaseDate.setText("Release Date : " + movie.getRelease_date());
+        viewHolder.rating.setText("Rating : " + movie.getVote_average());
 
         Glide.with(context)
-                .load("https://image.tmdb.org/t/p/w185" + movie.getPosterPath())
+                .load("https://image.tmdb.org/t/p/w185" + movie.getPoster_path())
                 .into(viewHolder.poster);
     }
 
@@ -67,18 +66,19 @@ public class MovieRecyclerAdapter  extends RecyclerView.Adapter<MovieRecyclerAda
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView login;
-        public TextView repos;
-        public TextView blog;
-        public ImageView poster;
+        @Bind(R.id.movieName)
+        TextView movieName;
+        @Bind(R.id.releaseDate)
+        TextView releaseDate;
+        @Bind(R.id.rating)
+        TextView rating;
+        @Bind(R.id.poster)
+        ImageView poster;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
-            login = (TextView) itemView.findViewById(R.id.login);
-            repos = (TextView) itemView.findViewById(R.id.repos);
-            blog = (TextView) itemView.findViewById(R.id.blog);
-            poster = (ImageView) itemView.findViewById(R.id.poster);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

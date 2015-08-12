@@ -1,6 +1,11 @@
-package com.nuron.flickz.MovieDB;
+package com.nuron.flickz.RealmDB;
 
-public class Movie {
+import io.realm.RealmObject;
+
+/**
+ * Created by sunil on 10-Aug-15.
+ */
+public class RealmMovie extends RealmObject {
 
     private String backdropPath;
     private int id;
@@ -11,6 +16,16 @@ public class Movie {
     private String title;
     private double vote_average;
 
+    public RealmMovie() {
+        this.backdropPath = "";
+        this.id = 0;
+        this.overview = "";
+        this.release_date = "";
+        this.poster_path = "";
+        this.popularity = 0;
+        this.title = "";
+        this.vote_average = 0;
+    }
 
     public String getBackdropPath() {
         return backdropPath;

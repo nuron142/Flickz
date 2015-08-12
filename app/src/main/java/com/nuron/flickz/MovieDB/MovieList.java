@@ -10,42 +10,36 @@ public class MovieList {
     private Integer totalPages;
     private Integer totalResults;
 
-    /**
-     *
-     * @return
-     * The page
-     */
     public Integer getPage() {
         return page;
     }
 
+    public void setPage(Integer page) {
+        this.page = page;
+    }
 
-    /**
-     *
-     * @return
-     * The movies
-     */
     public List<Movie> getResults() {
         return results;
     }
 
-    /**
-     *
-     * @return
-     * The totalPages
-     */
+    public void setResults(List<Movie> results) {
+        this.results = results;
+    }
+
     public Integer getTotalPages() {
         return totalPages;
     }
 
+    public void setTotalPages(Integer totalPages) {
+        this.totalPages = totalPages;
+    }
 
-    /**
-     *
-     * @return
-     * The totalResults
-     */
     public Integer getTotalResults() {
         return totalResults;
+    }
+
+    public void setTotalResults(Integer totalResults) {
+        this.totalResults = totalResults;
     }
 
 }
