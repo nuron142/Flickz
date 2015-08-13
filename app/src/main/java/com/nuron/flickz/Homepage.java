@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 import com.nuron.flickz.Adapters.MovieRecyclerAdapter;
 import com.nuron.flickz.MovieDB.Movie;
 import com.nuron.flickz.MovieDB.MovieList;
@@ -19,15 +21,19 @@ import com.nuron.flickz.RetrofitService.MovieDBService;
 import com.nuron.flickz.RetrofitService.ServiceFactory;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnFocusChange;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import rx.Observer;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
 
 public class Homepage extends AppCompatActivity{
 
@@ -39,6 +45,10 @@ public class Homepage extends AppCompatActivity{
     SwipeRefreshLayout swipeRefreshLayout;
 
     MovieRecyclerAdapter movieRecyclerAdapter;
+    private Subscription searchTextSubscription;
+    private Subscription movieSearchSubscription;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,15 +61,44 @@ public class Homepage extends AppCompatActivity{
         movieRecyclerAdapter = new MovieRecyclerAdapter(this);
         mRecyclerView.setAdapter(movieRecyclerAdapter);
 
-        swipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout
+                .setOnRefreshListener(() -> searchMovieAutomatic(searchEditText.getText().toString()));
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        searchTextSubscription.unsubscribe();
+        movieSearchSubscription.unsubscribe();
+    }
+
+    @OnFocusChange(R.id.search)
+    public void searchEditTextFocusChange() {
+        searchTextSubscription = RxTextView.textChangeEvents(searchEditText)
+                .debounce(400, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<TextViewTextChangeEvent>() {
                     @Override
-                    public void onRefresh() {
-                        searchMovie();
+                    public void onCompleted() {
                     }
 
-                });
+                    @Override
+                    public void onError(Throwable e) {
+                    }
 
+                    @Override
+                    public void onNext(TextViewTextChangeEvent textViewTextChangeEvent) {
+
+                        Log.d("1", "Automatic search : " + textViewTextChangeEvent.text().toString());
+                        searchMovieAutomatic(textViewTextChangeEvent.text().toString());
+                    }
+                });
     }
 
     public void clear() {
@@ -68,49 +107,21 @@ public class Homepage extends AppCompatActivity{
         movieRecyclerAdapter.notifyDataSetChanged();
     }
 
-    @OnClick(R.id.button_search)
-    public void searchClick() {
-        searchMovie();
-    }
+    public void searchMovieAutomatic(String searchText) {
+        if (searchText.length() < 1)
+            return;
 
-
-    private void searchMovie() {
         if (isNetConnected()) {
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                }
-            });
+            swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
 
             MovieDBService service = ServiceFactory.createRetrofitService(MovieDBService.class, MovieDBService.SERVICE_ENDPOINT);
-//                service.movieByID("210479",MovieDBService.API_KEY)
-//                        .subscribeOn(Schedulers.newThread())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(new Subscriber<Movie>() {
-//                            @Override
-//                            public final void onCompleted() {
-//                                // do nothing
-//                            }
-//
-//                            @Override
-//                            public final void onError(Throwable e) {
-//                                Log.e("GithubDemo", e.getMessage());
-//                            }
-//
-//                            @Override
-//                            public final void onNext(Movie response) {
-//                                Log.d("1","Movie Title = "+response.getTitle()+", Release date = "+response.getReleaseDate()+" Vote = "+response.getVoteAverage());
-//                                movieRecyclerAdapter.addData(response);
-//                            }
-//                        });
-            service.searchMovie(searchEditText.getText().toString(), MovieDBService.API_KEY)
+
+            movieSearchSubscription = service.searchMovie(searchText, MovieDBService.API_KEY)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<MovieList>() {
                         @Override
                         public final void onCompleted() {
-                            // do nothing
                         }
 
                         @Override
@@ -127,7 +138,7 @@ public class Homepage extends AppCompatActivity{
                             List<Movie> movies = response.getResults();
                             for (Movie movie : movies) {
                                 movieRecyclerAdapter.addData(movie);
-                                addToDB(movie);
+                                //addToDB(movie);
                             }
                         }
                     });
@@ -168,7 +179,6 @@ public class Homepage extends AppCompatActivity{
 
 
     public boolean isNetConnected() {
-        Log.d("1", "Checking Network connection");
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
